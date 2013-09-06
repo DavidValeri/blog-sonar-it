@@ -37,7 +37,5 @@ public class TestableClassTest {
     @Test
     public void test() {
         testableClass.doSomething(false);
-        
-        testableClass.doSomething(true);
     }
 }

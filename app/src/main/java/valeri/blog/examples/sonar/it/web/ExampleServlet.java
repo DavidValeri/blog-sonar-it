@@ -23,7 +23,7 @@ public class ExampleServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         
-        testableClass.doSomething(false);
+        testableClass.doSomething(true);
         
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
