@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2013 David Valeri.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>valeri.blog.examples.sonar.it</groupId>
+  <artifactId>sonar-it-example-parent</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  
+  <packaging>pom</packaging>
+  
+  <name>David Valeri's Blog :: Examples :: Sonar IT</name>
+  
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+  
+  <properties>
+    <junit.version>4.7</junit.version>
+    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.5.11</slf4j.version>
+  
+    <!-- The Cargo container type -->
+    <cargo.container.id>tomcat6x</cargo.container.id>
+    <!-- The URL of the Zip file based installer for the container that Cargo is to deploy -->
+    <cargo.container.url>https://archive.apache.org/dist/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip</cargo.container.url>
+    <!-- The location where downloaded container Zip file installers are cached -->
+    <cargo.container.download.dir>${user.home}/.m2/cargo/containers</cargo.container.download.dir>
+    <!-- The port used by the forked container -->
+    <cargo.container.port>8080</cargo.container.port>
+    <!-- When using Tomcat, the AJP connector listen port -->
+    <cargo.container.tomcat.ajp.port>8009</cargo.container.tomcat.ajp.port>
+    <!-- The RMI port used on the container.  For Tomcat, this is the value of the /Server/@port attribute. -->
+    <cargo.container.rmi.port>8205</cargo.container.rmi.port>
+    <!-- Optional JVM arguments for the forked container that are appended to any debugging 
+         configuration set by cargo.container.jvmargs.debug (See cargo-debug profile.)-->
+    <cargo.container.jvmargs></cargo.container.jvmargs>
+    <!-- The port to use when the debugger is enabled. -->
+    <cargo.container.debug.port>8000</cargo.container.debug.port>
+    <!-- The suspend setting to use when the debugger is enabled. -->
+    <cargo.container.debug.suspend>n</cargo.container.debug.suspend>
+    <!-- The debug arguments used to enable debugging on the forked JVM. -->
+    <cargo.container.debug.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=${cargo.container.debug.suspend},address=${cargo.container.debug.port} -Xnoagent -Djava.compiler=NONE</cargo.container.debug.jvmargs>
+    <cargo.container.jvmargs.debug></cargo.container.jvmargs.debug>
+    
+    <cargo.deployable.default.groupId>${project.groupId}</cargo.deployable.default.groupId>
+    <cargo.deployable.default.artifactId>${project.artifactId}</cargo.deployable.default.artifactId>
+    <cargo.deployable.default.context>${project.artifactId}</cargo.deployable.default.context>
+    
+    
+    <!-- Location of the JaCoCo output file created by the agent execution during ITs. We want
+         all modules to dump their coverage information into a single file for Sonar to pick up. 
+         Sonar is only going to look for one file so we put the file in target folder of the root of the
+         project when running a top-down build.  session.executionRootDirectory points there if
+         we run Maven from the top level folder of the project.
+         If you don't do it this way, you have to define an absolute path to a fixed location
+         on the server or you have to put a relative path in every child module defining where JaCoCo is
+         to place its output file.  The last solution is error prone so the solution shown here or the use
+         of a fixed location is recommended. -->
+    <jacoco.out.path>${session.executionRootDirectory}/target</jacoco.out.path>
+    <jacoco.out.file>jacoco.exec</jacoco.out.file>
+    
+    <!-- Location of the JaCoCo IT output file for use on Jenkins.  See jacoco.out.path.  NOTE: Can't use 
+         ${session.executionRootDirectory} here because of http://jira.codehaus.org/browse/SONAR-3427.  
+         env.WORKSPACE is set by Jenkins, which is really the only time sonar:sonar is going to be run in 
+         most cases.  -->
+    <sonar.jacoco.itReportPath>${env.WORKSPACE}/target/${jacoco.out.file}</sonar.jacoco.itReportPath>
+  </properties>
+
+  <modules>
+    <module>library</module>
+    <module>app</module>
+  </modules>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${log4j.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+    
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+
+      <!-- Prepares a variable, jacoco.agent.arg, that contains the info to be passed to the JVM hosting the code
+           being tested. -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.6.3.201306030806</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${jacoco.out.path}/${jacoco.out.file}</destFile>
+              <propertyName>jacoco.agent.arg</propertyName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.16</version>
+        <executions>
+          <execution>
+            <id>verify</id>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <argLine>${jacoco.agent.arg}</argLine>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.cargo</groupId>
+          <artifactId>cargo-maven2-plugin</artifactId>
+          <version>1.3.3</version>
+          <configuration>
+            <container>
+              <containerId>${cargo.container.id}</containerId>
+              <zipUrlInstaller>
+                <url>${cargo.container.url}</url>
+                <downloadDir>${cargo.container.download.dir}</downloadDir>
+              </zipUrlInstaller>
+              <log>${project.build.directory}/cargo/logs/cargo.log</log>
+              <output>${project.build.directory}/cargo/logs/container.log</output>
+            </container>
+            <deployables>
+              <deployable>
+                <groupId>${cargo.deployable.default.groupId}</groupId>
+                <artifactId>${cargo.deployable.default.artifactId}</artifactId>
+                <type>war</type>
+                <properties>
+                  <context>${cargo.deployable.default.context}</context>
+                </properties>
+              </deployable>
+            </deployables>
+          </configuration>
+          <executions>
+            <execution>
+              <id>start-container</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>start</goal>
+              </goals>
+              <!-- We bring this configuration down into the start goal since this configuration
+                   really only applies to the startup activities.  This is particularly relevant
+                   for forked JVM debugging since the stop goal will try to launch another JVM using
+                   the same JVM args if we leave this configuration at the plug-in level.  When the
+                   debugger is in use, there will be a port collision and the build will hang. -->
+              <configuration>
+                <configuration>
+                  <properties>
+                    <cargo.jvmargs>
+                      ${cargo.container.jvmargs.debug}
+                      ${jacoco.agent.arg}
+                      ${cargo.container.jvmargs}
+                    </cargo.jvmargs>
+                    <cargo.servlet.port>${cargo.container.port}</cargo.servlet.port>
+                    <cargo.tomcat.ajp.port>${cargo.container.tomcat.ajp.port}</cargo.tomcat.ajp.port>
+                    <cargo.rmi.port>${cargo.container.rmi.port}</cargo.rmi.port>
+                  </properties>
+                </configuration>
+              </configuration>
+            </execution>
+            <execution>
+              <id>default-cli</id>
+              <goals>
+                <goal>run</goal>
+              </goals>
+              <!-- We bring this configuration down into the CLI run goal because we need it to apply to the
+                   run goal too.  See note in the start goal as to why it is needed in the first place. -->
+              <configuration>
+                <configuration>
+                  <properties>
+                    <cargo.jvmargs>
+                      ${cargo.container.jvmargs.debug}
+                      ${cargo.container.jvmargs}
+                    </cargo.jvmargs>
+                    <cargo.servlet.port>${cargo.container.port}</cargo.servlet.port>
+                    <cargo.tomcat.ajp.port>${cargo.container.tomcat.ajp.port}</cargo.tomcat.ajp.port>
+                    <cargo.rmi.port>${cargo.container.rmi.port}</cargo.rmi.port>
+                  </properties>
+                </configuration>
+              </configuration>
+            </execution>
+            <execution>
+              <id>stop-container</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>stop</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  
+  <profiles>
+    <profile>
+      <id>cargo-debug</id>
+      <activation>
+        <property>
+          <name>cargo.debug</name>
+        </property>
+      </activation>
+      <properties>
+        <cargo.container.jvmargs.debug>${cargo.container.debug.jvmargs}</cargo.container.jvmargs.debug>
+      </properties>
+    </profile>
+  </profiles>
+</project>
+        
