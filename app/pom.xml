@@ -31,6 +31,11 @@
   
   <name>David Valeri's Blog :: Examples :: Sonar IT :: App</name>
   
+  <properties>
+    <!-- Change the port that Cargo listens on to avoid conflicts with the out-of-the-box Jenkins configuration. -->
+    <cargo.container.port>7070</cargo.container.port>
+  </properties>
+  
   <dependencies>
     <dependency>
       <groupId>javax.servlet</groupId>
