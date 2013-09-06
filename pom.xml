@@ -251,6 +251,15 @@
               <goals>
                 <goal>stop</goal>
               </goals>
+              <configuration>
+                <configuration>
+                  <properties>
+                    <cargo.servlet.port>${cargo.container.port}</cargo.servlet.port>
+                    <cargo.tomcat.ajp.port>${cargo.container.tomcat.ajp.port}</cargo.tomcat.ajp.port>
+                    <cargo.rmi.port>${cargo.container.rmi.port}</cargo.rmi.port>
+                  </properties>
+                </configuration>
+              </configuration>
             </execution>
           </executions>
         </plugin>

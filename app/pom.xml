@@ -34,6 +34,8 @@
   <properties>
     <!-- Change the port that Cargo listens on to avoid conflicts with the out-of-the-box Jenkins configuration. -->
     <cargo.container.port>7070</cargo.container.port>
+    <cargo.container.tomcat.ajp.port>7009</cargo.container.tomcat.ajp.port>
+    <cargo.container.rmi.port>7205</cargo.container.rmi.port>
   </properties>
   
   <dependencies>
