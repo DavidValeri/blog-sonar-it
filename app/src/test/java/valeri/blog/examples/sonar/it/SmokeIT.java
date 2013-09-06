@@ -33,7 +33,7 @@ public class SmokeIT {
     @Test
     public void test() throws Exception {
         
-        URL url = new URL("http://localhost:8080/sonar-it-example-app/");
+        URL url = new URL("http://localhost:7070/sonar-it-example-app/");
         
         
         BufferedReader in = new BufferedReader(new InputStreamReader(url
