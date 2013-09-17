@@ -19,9 +19,15 @@
 
   <modelVersion>4.0.0</modelVersion>
   
+  <parent>
+    <groupId>valeri.blog.examples</groupId>
+    <artifactId>parent</artifactId>
+    <version>6</version>
+  </parent>
+  
   <groupId>valeri.blog.examples.sonar.it</groupId>
-  <artifactId>sonar-it-example-parent</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>sonar-it-example-root</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   
   <packaging>pom</packaging>
   
@@ -123,15 +129,6 @@
     
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5.1</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-
       <!-- Prepares a variable, jacoco.agent.arg, that contains the info to be passed to the JVM hosting the code
            being tested. -->
       <plugin>
