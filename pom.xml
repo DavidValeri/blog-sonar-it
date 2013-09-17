@@ -14,8 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   
@@ -27,7 +26,7 @@
   
   <groupId>valeri.blog.examples.sonar.it</groupId>
   <artifactId>sonar-it-example-root</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   
   <packaging>pom</packaging>
   
@@ -61,14 +60,14 @@
     <cargo.container.rmi.port>8205</cargo.container.rmi.port>
     <!-- Optional JVM arguments for the forked container that are appended to any debugging 
          configuration set by cargo.container.jvmargs.debug (See cargo-debug profile.)-->
-    <cargo.container.jvmargs></cargo.container.jvmargs>
+    <cargo.container.jvmargs />
     <!-- The port to use when the debugger is enabled. -->
     <cargo.container.debug.port>8000</cargo.container.debug.port>
     <!-- The suspend setting to use when the debugger is enabled. -->
     <cargo.container.debug.suspend>n</cargo.container.debug.suspend>
     <!-- The debug arguments used to enable debugging on the forked JVM. -->
     <cargo.container.debug.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=${cargo.container.debug.suspend},address=${cargo.container.debug.port} -Xnoagent -Djava.compiler=NONE</cargo.container.debug.jvmargs>
-    <cargo.container.jvmargs.debug></cargo.container.jvmargs.debug>
+    <cargo.container.jvmargs.debug />
     
     <cargo.deployable.default.groupId>${project.groupId}</cargo.deployable.default.groupId>
     <cargo.deployable.default.artifactId>${project.artifactId}</cargo.deployable.default.artifactId>
@@ -277,5 +276,9 @@
       </properties>
     </profile>
   </profiles>
+
+  <scm>
+    <tag>1.0.0</tag>
+  </scm>
 </project>
         
